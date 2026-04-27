@@ -17,9 +17,6 @@ export const load = (): Resume => {
 
 export const saveField = (key: string, value: string): void => {
   const current = load();
-  const keys = key.split('.');
-  if (keys.length === 1) {
-    (current as Record<string, unknown>)[key] = value;
-  }
+  (current as Record<string, unknown>)[key] = value;
   save(current);
 };
