@@ -115,14 +115,65 @@ const r = defaultResume;
     import { load, save } from '../scripts/storage';
     import { toggleEdit } from '../scripts/editor';
 
+    // Helpers
+    const getField = (field: string): string =>
+      document.querySelector<HTMLElement>(`[data-field="${field}"]`)?.textContent ?? '';
+
+    const setField = (field: string, value: string): void => {
+      const el = document.querySelector<HTMLElement>(`[data-field="${field}"]`);
+      if (el) el.textContent = value;
+    };
+
+    const parseList = (text: string | null | undefined): string[] =>
+      text?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
+
+    const readListFields = (prefix: string, count: number): string[] =>
+      Array.from({ length: count }, (_, i) => getField(`${prefix}-${i}`));
+
+    // Debounce helper to batch rapid blur events into a single save
+    let saveTimer: ReturnType<typeof setTimeout> | undefined;
+    const debouncedSave = (): void => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(persistAll, 300);
+    };
+
+    const persistAll = (): void => {
+      const current = load();
+
+      // Simple string fields
+      (['name', 'title', 'phone', 'email', 'website', 'location', 'summary'] as const).forEach(field => {
+        (current as Record<string, unknown>)[field] = getField(field);
+      });
+
+      // Experience
+      current.experiences.forEach((exp, i) => {
+        exp.title = getField(`exp-${i}-title`);
+        exp.company = getField(`exp-${i}-company`);
+        exp.period = getField(`exp-${i}-period`);
+        exp.description = getField(`exp-${i}-description`);
+      });
+
+      // Education
+      current.education.forEach((edu, i) => {
+        edu.degree = getField(`edu-${i}-degree`);
+        edu.school = getField(`edu-${i}-school`);
+        edu.period = getField(`edu-${i}-period`);
+      });
+
+      // Skills
+      current.skills.proficient = parseList(getField('skills-proficient'));
+      current.skills.familiar = parseList(getField('skills-familiar'));
+
+      // List sections
+      current.oss = readListFields('oss', current.oss.length);
+      current.talks = readListFields('talk', current.talks.length);
+      current.hobbies = readListFields('hobby', current.hobbies.length);
+
+      save(current);
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
       const resume = load();
-
-      // Helper to set a data-field element's text
-      const setField = (field: string, value: string) => {
-        const el = document.querySelector<HTMLElement>(`[data-field="${field}"]`);
-        if (el) el.textContent = value;
-      };
 
       // Populate simple fields
       setField('name', resume.name);
@@ -157,62 +208,9 @@ const r = defaultResume;
       resume.talks.forEach((item, i) => setField(`talk-${i}`, item));
       resume.hobbies.forEach((item, i) => setField(`hobby-${i}`, item));
 
-      // Save on blur
+      // Save on blur (debounced)
       document.querySelectorAll('[data-field]').forEach(el => {
-        el.addEventListener('blur', () => {
-          const current = load();
-
-          // Update simple string fields
-          const simpleFields = ['name', 'title', 'phone', 'email', 'website', 'location', 'summary'] as const;
-          simpleFields.forEach(field => {
-            const elem = document.querySelector<HTMLElement>(`[data-field="${field}"]`);
-            if (elem) (current as Record<string, unknown>)[field] = elem.textContent ?? '';
-          });
-
-          // Update experience fields
-          current.experiences.forEach((exp, i) => {
-            const title = document.querySelector<HTMLElement>(`[data-field="exp-${i}-title"]`);
-            const company = document.querySelector<HTMLElement>(`[data-field="exp-${i}-company"]`);
-            const period = document.querySelector<HTMLElement>(`[data-field="exp-${i}-period"]`);
-            const description = document.querySelector<HTMLElement>(`[data-field="exp-${i}-description"]`);
-            if (title) exp.title = title.textContent ?? '';
-            if (company) exp.company = company.textContent ?? '';
-            if (period) exp.period = period.textContent ?? '';
-            if (description) exp.description = description.textContent ?? '';
-          });
-
-          // Update education fields
-          current.education.forEach((edu, i) => {
-            const degree = document.querySelector<HTMLElement>(`[data-field="edu-${i}-degree"]`);
-            const school = document.querySelector<HTMLElement>(`[data-field="edu-${i}-school"]`);
-            const period = document.querySelector<HTMLElement>(`[data-field="edu-${i}-period"]`);
-            if (degree) edu.degree = degree.textContent ?? '';
-            if (school) edu.school = school.textContent ?? '';
-            if (period) edu.period = period.textContent ?? '';
-          });
-
-          // Update skills
-          const profEl = document.querySelector<HTMLElement>('[data-field="skills-proficient"]');
-          const famEl = document.querySelector<HTMLElement>('[data-field="skills-familiar"]');
-          if (profEl) current.skills.proficient = profEl.textContent?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
-          if (famEl) current.skills.familiar = famEl.textContent?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
-
-          // Update OSS, talks, hobbies
-          current.oss = current.oss.map((_, i) => {
-            const el = document.querySelector<HTMLElement>(`[data-field="oss-${i}"]`);
-            return el?.textContent ?? '';
-          });
-          current.talks = current.talks.map((_, i) => {
-            const el = document.querySelector<HTMLElement>(`[data-field="talk-${i}"]`);
-            return el?.textContent ?? '';
-          });
-          current.hobbies = current.hobbies.map((_, i) => {
-            const el = document.querySelector<HTMLElement>(`[data-field="hobby-${i}"]`);
-            return el?.textContent ?? '';
-          });
-
-          save(current);
-        });
+        el.addEventListener('blur', debouncedSave);
       });
 
       // Edit button

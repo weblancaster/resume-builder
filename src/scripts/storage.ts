@@ -15,8 +15,4 @@ export const load = (): Resume => {
   }
 };
 
-export const saveField = (key: string, value: string): void => {
-  const current = load();
-  (current as Record<string, unknown>)[key] = value;
-  save(current);
-};
+
