@@ -1,4 +1,4 @@
-export let isEditing = false;
+let isEditing = false;
 
 export const toggleEdit = (): boolean => {
   isEditing = !isEditing;
