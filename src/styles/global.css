@@ -1,0 +1,290 @@
+:root {
+  --color-text: #1a1a1a;
+  --color-text-muted: #555;
+  --color-accent: #2c5f8a;
+  --color-border: #d0d0d0;
+  --color-bg: #f4f4f4;
+  --color-resume-bg: #ffffff;
+  --color-sidebar-bg: #f7f8fa;
+  --color-edit-highlight: rgba(44, 95, 138, 0.08);
+  --font-body: 'Georgia', 'Times New Roman', serif;
+  --font-ui: system-ui, -apple-system, sans-serif;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Toolbar ─────────────────────────────────────────── */
+.toolbar {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 1000;
+  display: flex;
+  gap: 0.5rem;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+.toolbar button {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0.4rem 0.9rem;
+  border-radius: 5px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.toolbar button:hover {
+  background: #f0f4f8;
+  border-color: var(--color-accent);
+}
+
+.toolbar button#btn-edit {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+.toolbar button#btn-edit:hover {
+  background: #1e4a72;
+}
+
+/* ── Resume container ─────────────────────────────────── */
+.resume-wrapper {
+  min-height: 100vh;
+  padding: 2.5rem 1rem 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.resume-container {
+  background: var(--color-resume-bg);
+  width: 210mm;
+  min-height: 297mm;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.13);
+  display: grid;
+  grid-template-columns: 65fr 35fr;
+  grid-template-rows: auto 1fr;
+}
+
+/* ── Header (spans both columns) ─────────────────────── */
+.resume-header {
+  grid-column: 1 / -1;
+  padding: 2rem 2rem 1.25rem;
+  border-bottom: 2px solid var(--color-accent);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.resume-header-left .resume-name {
+  font-family: var(--font-ui);
+  font-size: 2.2em;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--color-text);
+  margin: 0 0 0.15rem;
+  line-height: 1.1;
+}
+
+.resume-header-left .resume-title {
+  font-family: var(--font-ui);
+  font-size: 1.05em;
+  color: var(--color-accent);
+  font-weight: 500;
+  margin: 0;
+}
+
+.resume-header-right {
+  text-align: right;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.resume-header-right span {
+  display: block;
+}
+
+/* ── Main column ──────────────────────────────────────── */
+.resume-main {
+  padding: 1.5rem 1.75rem 2rem;
+  border-right: 1px solid var(--color-border);
+}
+
+/* ── Sidebar ──────────────────────────────────────────── */
+.resume-sidebar {
+  background: var(--color-sidebar-bg);
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+/* ── Section ──────────────────────────────────────────── */
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.section-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3rem;
+  margin: 0 0 0.75rem;
+}
+
+/* ── Experience ───────────────────────────────────────── */
+.exp-item {
+  margin-bottom: 1.1rem;
+}
+
+.exp-item:last-child {
+  margin-bottom: 0;
+}
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+
+.exp-title {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.exp-period {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.exp-company {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-bottom: 0.3rem;
+}
+
+.exp-description {
+  font-size: 12.5px;
+  color: var(--color-text);
+  line-height: 1.55;
+}
+
+/* ── Education ────────────────────────────────────────── */
+.edu-item {
+  margin-bottom: 0.75rem;
+}
+
+.edu-degree {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 12.5px;
+}
+
+.edu-school {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.edu-period {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* ── Summary ──────────────────────────────────────────── */
+.summary-text {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+/* ── Sidebar sections ─────────────────────────────────── */
+.skills-group {
+  margin-bottom: 0.75rem;
+}
+
+.skills-group-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.skills-value {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--color-text);
+  line-height: 1.55;
+}
+
+.list-item {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--color-text);
+  line-height: 1.6;
+  padding-left: 0.8rem;
+  position: relative;
+}
+
+.list-item::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+}
+
+/* ── Edit mode ────────────────────────────────────────── */
+body.edit-mode [data-field] {
+  outline: none;
+  border-bottom: 1.5px dashed var(--color-accent);
+  background: var(--color-edit-highlight);
+  border-radius: 2px;
+  cursor: text;
+  transition: background 0.15s;
+}
+
+body.edit-mode [data-field]:focus {
+  background: rgba(44, 95, 138, 0.14);
+  box-shadow: 0 0 0 2px rgba(44, 95, 138, 0.18);
+}

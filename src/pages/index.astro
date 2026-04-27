@@ -1,0 +1,231 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { defaultResume } from '../data/resume';
+
+const r = defaultResume;
+---
+<Layout title="Resume Builder">
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button id="btn-edit">✏️ Edit</button>
+    <button id="btn-print">🖨️ Print</button>
+  </div>
+
+  <div class="resume-wrapper">
+    <div class="resume-container">
+
+      <!-- Header -->
+      <header class="resume-header">
+        <div class="resume-header-left">
+          <h1 class="resume-name" data-field="name">{r.name}</h1>
+          <p class="resume-title" data-field="title">{r.title}</p>
+        </div>
+        <div class="resume-header-right">
+          <span data-field="phone">{r.phone}</span>
+          <span data-field="email">{r.email}</span>
+          <span data-field="website">{r.website}</span>
+          <span data-field="location">{r.location}</span>
+        </div>
+      </header>
+
+      <!-- Main column -->
+      <main class="resume-main">
+
+        <!-- Summary -->
+        <section class="section">
+          <h2 class="section-label">Summary</h2>
+          <p class="summary-text" data-field="summary">{r.summary}</p>
+        </section>
+
+        <!-- Experience -->
+        <section class="section">
+          <h2 class="section-label">Experience</h2>
+          {r.experiences.map((exp, i) => (
+            <div class="exp-item">
+              <div class="exp-header">
+                <span class="exp-title" data-field={`exp-${i}-title`}>{exp.title}</span>
+                <span class="exp-period" data-field={`exp-${i}-period`}>{exp.period}</span>
+              </div>
+              <div class="exp-company" data-field={`exp-${i}-company`}>{exp.company}</div>
+              <div class="exp-description" data-field={`exp-${i}-description`}>{exp.description}</div>
+            </div>
+          ))}
+        </section>
+
+        <!-- Education -->
+        <section class="section">
+          <h2 class="section-label">Education</h2>
+          {r.education.map((edu, i) => (
+            <div class="edu-item">
+              <div class="edu-degree" data-field={`edu-${i}-degree`}>{edu.degree}</div>
+              <div class="edu-school" data-field={`edu-${i}-school`}>{edu.school}</div>
+              <div class="edu-period" data-field={`edu-${i}-period`}>{edu.period}</div>
+            </div>
+          ))}
+        </section>
+
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="resume-sidebar">
+
+        <!-- Skills -->
+        <section class="section">
+          <h2 class="section-label">Skills</h2>
+          <div class="skills-group">
+            <div class="skills-group-label">Proficient</div>
+            <div class="skills-value" data-field="skills-proficient">{r.skills.proficient.join(', ')}</div>
+          </div>
+          <div class="skills-group">
+            <div class="skills-group-label">Familiar</div>
+            <div class="skills-value" data-field="skills-familiar">{r.skills.familiar.join(', ')}</div>
+          </div>
+        </section>
+
+        <!-- Open Source -->
+        <section class="section">
+          <h2 class="section-label">Open Source</h2>
+          {r.oss.map((item, i) => (
+            <div class="list-item" data-field={`oss-${i}`}>{item}</div>
+          ))}
+        </section>
+
+        <!-- Talks -->
+        <section class="section">
+          <h2 class="section-label">Talks</h2>
+          {r.talks.map((item, i) => (
+            <div class="list-item" data-field={`talk-${i}`}>{item}</div>
+          ))}
+        </section>
+
+        <!-- Hobbies -->
+        <section class="section">
+          <h2 class="section-label">Hobbies</h2>
+          {r.hobbies.map((item, i) => (
+            <div class="list-item" data-field={`hobby-${i}`}>{item}</div>
+          ))}
+        </section>
+
+      </aside>
+
+    </div>
+  </div>
+
+  <script>
+    import { load, save } from '../scripts/storage';
+    import { toggleEdit } from '../scripts/editor';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const resume = load();
+
+      // Helper to set a data-field element's text
+      const setField = (field: string, value: string) => {
+        const el = document.querySelector<HTMLElement>(`[data-field="${field}"]`);
+        if (el) el.textContent = value;
+      };
+
+      // Populate simple fields
+      setField('name', resume.name);
+      setField('title', resume.title);
+      setField('phone', resume.phone);
+      setField('email', resume.email);
+      setField('website', resume.website);
+      setField('location', resume.location);
+      setField('summary', resume.summary);
+
+      // Populate experience fields
+      resume.experiences.forEach((exp, i) => {
+        setField(`exp-${i}-title`, exp.title);
+        setField(`exp-${i}-company`, exp.company);
+        setField(`exp-${i}-period`, exp.period);
+        setField(`exp-${i}-description`, exp.description);
+      });
+
+      // Populate education fields
+      resume.education.forEach((edu, i) => {
+        setField(`edu-${i}-degree`, edu.degree);
+        setField(`edu-${i}-school`, edu.school);
+        setField(`edu-${i}-period`, edu.period);
+      });
+
+      // Populate skills
+      setField('skills-proficient', resume.skills.proficient.join(', '));
+      setField('skills-familiar', resume.skills.familiar.join(', '));
+
+      // Populate OSS, talks, hobbies
+      resume.oss.forEach((item, i) => setField(`oss-${i}`, item));
+      resume.talks.forEach((item, i) => setField(`talk-${i}`, item));
+      resume.hobbies.forEach((item, i) => setField(`hobby-${i}`, item));
+
+      // Save on blur
+      document.querySelectorAll('[data-field]').forEach(el => {
+        el.addEventListener('blur', () => {
+          const current = load();
+
+          // Update simple string fields
+          const simpleFields = ['name', 'title', 'phone', 'email', 'website', 'location', 'summary'] as const;
+          simpleFields.forEach(field => {
+            const elem = document.querySelector<HTMLElement>(`[data-field="${field}"]`);
+            if (elem) (current as Record<string, unknown>)[field] = elem.textContent ?? '';
+          });
+
+          // Update experience fields
+          current.experiences.forEach((exp, i) => {
+            const title = document.querySelector<HTMLElement>(`[data-field="exp-${i}-title"]`);
+            const company = document.querySelector<HTMLElement>(`[data-field="exp-${i}-company"]`);
+            const period = document.querySelector<HTMLElement>(`[data-field="exp-${i}-period"]`);
+            const description = document.querySelector<HTMLElement>(`[data-field="exp-${i}-description"]`);
+            if (title) exp.title = title.textContent ?? '';
+            if (company) exp.company = company.textContent ?? '';
+            if (period) exp.period = period.textContent ?? '';
+            if (description) exp.description = description.textContent ?? '';
+          });
+
+          // Update education fields
+          current.education.forEach((edu, i) => {
+            const degree = document.querySelector<HTMLElement>(`[data-field="edu-${i}-degree"]`);
+            const school = document.querySelector<HTMLElement>(`[data-field="edu-${i}-school"]`);
+            const period = document.querySelector<HTMLElement>(`[data-field="edu-${i}-period"]`);
+            if (degree) edu.degree = degree.textContent ?? '';
+            if (school) edu.school = school.textContent ?? '';
+            if (period) edu.period = period.textContent ?? '';
+          });
+
+          // Update skills
+          const profEl = document.querySelector<HTMLElement>('[data-field="skills-proficient"]');
+          const famEl = document.querySelector<HTMLElement>('[data-field="skills-familiar"]');
+          if (profEl) current.skills.proficient = profEl.textContent?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
+          if (famEl) current.skills.familiar = famEl.textContent?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
+
+          // Update OSS, talks, hobbies
+          current.oss = current.oss.map((_, i) => {
+            const el = document.querySelector<HTMLElement>(`[data-field="oss-${i}"]`);
+            return el?.textContent ?? '';
+          });
+          current.talks = current.talks.map((_, i) => {
+            const el = document.querySelector<HTMLElement>(`[data-field="talk-${i}"]`);
+            return el?.textContent ?? '';
+          });
+          current.hobbies = current.hobbies.map((_, i) => {
+            const el = document.querySelector<HTMLElement>(`[data-field="hobby-${i}"]`);
+            return el?.textContent ?? '';
+          });
+
+          save(current);
+        });
+      });
+
+      // Edit button
+      document.getElementById('btn-edit')?.addEventListener('click', () => {
+        const editing = toggleEdit();
+        const btn = document.getElementById('btn-edit') as HTMLButtonElement;
+        if (btn) btn.textContent = editing ? '✅ Done Editing' : '✏️ Edit';
+      });
+
+      // Print button
+      document.getElementById('btn-print')?.addEventListener('click', () => {
+        window.print();
+      });
+    });
+  </script>
+</Layout>
