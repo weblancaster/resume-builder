@@ -1,0 +1,28 @@
+@media print {
+  .toolbar,
+  [data-edit-ui] {
+    display: none !important;
+  }
+
+  body {
+    margin: 0;
+    font-size: 10pt;
+    background: #fff;
+  }
+
+  .resume-wrapper {
+    padding: 0;
+    background: #fff;
+  }
+
+  .resume-container {
+    width: 100%;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+}
