@@ -73,7 +73,9 @@ const r = defaultResume;
         <section class="section">
           <h2 class="section-label">Open Source</h2>
           {r.oss.map((item, i) => (
-            <div class="list-item" data-field={`oss-${i}`}>{item}</div>
+            <div class="list-item" data-field={`oss-${i}`} data-url={item.url}>
+              <a href={item.url} target="_blank" rel="noopener noreferrer">{item.name}</a>
+            </div>
           ))}
         </section>
 
@@ -81,7 +83,12 @@ const r = defaultResume;
         <section class="section">
           <h2 class="section-label">Talks</h2>
           {r.talks.map((item, i) => (
-            <div class="list-item" data-field={`talk-${i}`}>{item}</div>
+            <div class="list-item" data-field={`talk-${i}`} data-url={item.url ?? ''}>
+              {item.url
+                ? <a href={item.url} target="_blank" rel="noopener noreferrer">{item.name}</a>
+                : item.name
+              }
+            </div>
           ))}
         </section>
 
@@ -157,8 +164,15 @@ const r = defaultResume;
       current.skills.familiar = parseList(getField('skills-familiar'));
 
       // List sections
-      current.oss = readListFields('oss', current.oss.length);
-      current.talks = readListFields('talk', current.talks.length);
+      current.oss = Array.from({ length: current.oss.length }, (_, i) => {
+        const el = document.querySelector<HTMLElement>(`[data-field="oss-${i}"]`);
+        return { name: el?.textContent?.trim() ?? '', url: el?.dataset.url ?? '' };
+      });
+      current.talks = Array.from({ length: current.talks.length }, (_, i) => {
+        const el = document.querySelector<HTMLElement>(`[data-field="talk-${i}"]`);
+        const url = el?.dataset.url;
+        return url ? { name: el?.textContent?.trim() ?? '', url } : { name: el?.textContent?.trim() ?? '' };
+      });
 
       save(current);
     };
@@ -194,8 +208,18 @@ const r = defaultResume;
       setField('skills-familiar', resume.skills.familiar.join(', '));
 
       // Populate OSS, talks
-      resume.oss.forEach((item, i) => setField(`oss-${i}`, item));
-      resume.talks.forEach((item, i) => setField(`talk-${i}`, item));
+      resume.oss.forEach((item, i) => {
+        const anchor = document.querySelector<HTMLElement>(`[data-field="oss-${i}"] a`);
+        if (anchor) anchor.textContent = item.name;
+      });
+      resume.talks.forEach((item, i) => {
+        const anchor = document.querySelector<HTMLElement>(`[data-field="talk-${i}"] a`);
+        if (anchor) {
+          anchor.textContent = item.name;
+        } else {
+          setField(`talk-${i}`, item.name);
+        }
+      });
 
       // Save on blur (debounced)
       document.querySelectorAll('[data-field]').forEach(el => {

@@ -22,8 +22,8 @@ export type Resume = {
     proficient: string[];
     familiar: string[];
   };
-  oss: string[];
-  talks: string[];
+  oss: { name: string; url: string }[];
+  talks: { name: string; url?: string }[];
 };
 
 export const defaultResume: Resume = {
@@ -108,11 +108,30 @@ export const defaultResume: Resume = {
       "Data Structures & Algorithms",
     ],
   },
-  oss: ["Soundnode App (creator)", "Rome tools", "NX.dev"],
+  oss: [
+    {
+      name: "Soundnode App (creator)",
+      url: "https://github.com/Soundnode/soundnode-app",
+    },
+    { name: "Rome tools", url: "https://github.com/rome/tools" },
+    { name: "NX.dev", url: "https://nx.dev" },
+  ],
   talks: [
-    "Intro to Docker at FrontInBH, Brazil 2017",
-    "Soundnode App at Hamburg, Germany JS meetup 2017",
-    "NW.js (former node-webkit) at ChicagoWebConf 2015",
-    "Intro to React at Chicago HTML5 meetup (2015)",
+    {
+      name: "Intro to Docker at FrontInBH, Brazil 2017",
+      url: "https://speakerdeck.com/weblancaster/docker-but-im-a-frontend",
+    },
+    {
+      name: "Soundnode App at Hamburg, Germany JS meetup 2017",
+      url: "https://speakerdeck.com/weblancaster/soundnode-the-journey",
+    },
+    {
+      name: "NW.js (former node-webkit) at ChicagoWebConf 2015",
+      url: "https://speakerdeck.com/weblancaster/desktop-apps-with-nw-dot-js-and-angular-dot-js-updated",
+    },
+    {
+      name: "Intro to React at Chicago HTML5 meetup (2015)",
+      url: "https://speakerdeck.com/weblancaster/intro-to-reactjs",
+    },
   ],
 };
