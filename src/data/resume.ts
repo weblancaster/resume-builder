@@ -24,7 +24,6 @@ export type Resume = {
   };
   oss: string[];
   talks: string[];
-  hobbies: string[];
 };
 
 export const defaultResume: Resume = {
@@ -116,5 +115,4 @@ export const defaultResume: Resume = {
     "NW.js (former node-webkit) at ChicagoWebConf 2015",
     "Intro to React at Chicago HTML5 meetup (2015)",
   ],
-  hobbies: ["Brazilian Jiu-Jitsu (Black-Belt)"],
 };
