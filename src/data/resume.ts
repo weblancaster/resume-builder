@@ -5,10 +5,10 @@ export type Resume = {
   email: string;
   website: string;
   location: string;
-  summary: string;
   experiences: {
     title: string;
     company: string;
+    companyUrl: string;
     period: string;
     description: string;
   }[];
@@ -16,6 +16,7 @@ export type Resume = {
     degree: string;
     school: string;
     period: string;
+    description: string;
   }[];
   skills: {
     proficient: string[];
@@ -28,52 +29,92 @@ export type Resume = {
 
 export const defaultResume: Resume = {
   name: "Michael Lancaster",
-  title: "Senior Software Engineer",
-  phone: "(555) 123-4567",
-  email: "michael@example.com",
-  website: "weblancaster.com",
-  location: "San Francisco, CA",
-  summary: "Passionate software engineer with 10+ years of experience building scalable web applications and leading engineering teams.",
+  title: "Lead & Architect Frontend Software Engineer",
+  phone: "872 237 7265",
+  email: "michaell.llancaster@gmail.com",
+  website: "https://bymichaellancaster.com",
+  location: "",
   experiences: [
     {
+      title: "Staff Software Engineer",
+      company: "Mission Lane",
+      companyUrl: "https://www.missionlane.com",
+      period: "12/2022 - present",
+      description:
+        "Started by optimizing the credit card application implementing SSR/ISR, Above-the-Fold, Lazy Loading, and Fonts & Images Optimization. Currently working on the Card Dashboard for Web and React-Native. Working on new and old features, improved code quality with simpler patterns, built tools for better testing and dogfooding feats. Part of the Mission Lane AI committee I was able to teach and push the use of AI tools for productivity, added AI automation to CI workflows. Tech: Next.js, React-Query, GraphQL, React-Native/Expo, TypeScript, MSW, Jest, React Testing Lib, Playwright, Cloudflare, GHA, Git, Vertex AI, Github Copilot (automation tools).",
+    },
+    {
       title: "Senior Software Engineer",
-      company: "Tech Company Inc.",
-      period: "2020 – Present",
-      description: "Led development of microservices architecture serving 10M+ users. Mentored junior engineers and established code review practices."
+      company: "Endpoint",
+      companyUrl: "https://www.endpoint.com",
+      period: "02/2021 - 11/2022",
+      description:
+        "Led a new product development by architecting and implementing 1 micro FE and 3 web apps. Boosted product quality and developer efficiency by introducing a mono repo, linting, unit tests, Cypress, and CI/CD. Managed tasks creation and allocation while mentoring FE devs on complex work. Tech: NX.dev, Next.js, React-Query, TypeScript, Express.js, Jest, React Testing Lib, Cypress, JSON Server, Docker, Git.",
     },
     {
-      title: "Software Engineer",
-      company: "Startup Co.",
-      period: "2017 – 2020",
-      description: "Built and maintained React/Node.js applications. Reduced page load times by 40% through performance optimization."
+      title: "Founder",
+      company: "Padaone, Inc",
+      companyUrl: "",
+      period: "08/2020 - 02/2021",
+      description:
+        "Built an online marketplace for personal trainers, featuring payments, recorded classes, and live scheduling with Next.js (web), React-Native (iOS), and Go (REST API). Tech: Go (Gin-Gonic), GCP, Firebase, DigitalOcean, Node.js/Express, Next.js, Redux, Sagas, MUI, React-Native, Git, Twilio Video, Stripe Connect.",
     },
     {
-      title: "Frontend Developer",
-      company: "Agency XYZ",
-      period: "2014 – 2017",
-      description: "Developed responsive web applications for diverse clients across e-commerce, media, and fintech sectors."
-    }
+      title:
+        "Staff Frontend Engineer > Engineer Manager > Senior Architect, Frontend",
+      company: "BlackBerry",
+      companyUrl: "https://www.blackberry.com",
+      period: "09/2018 - 08/2020",
+      description:
+        "Managed 13 FE devs and led the migration from a legacy frontend to a React/Redux micro FE architecture with NX.dev. Increased code quality by enforcing TypeScript and rigorous testing with Jest/Cypress. Improved developer productivity by replacing an in-house component library with an open-source alternative, customized with our company theme brand. Tech: React, Redux, Redux-Sagas, React Router, TypeScript, MUI, Storybook, NX.dev, Webpack, Node.js/Express, Jest, Cypress, Jenkins, Docker, AWS.",
+    },
   ],
   education: [
     {
-      degree: "B.S. Computer Science",
-      school: "State University",
-      period: "2010 – 2014"
-    }
+      degree: "Associate degree in Information Technology",
+      school: "Divino Salvador (Brazil)",
+      period: "2008 – 2010",
+      description:
+        "Web Development (ASP - JS - CSS - HTML), Databases (SQL), Software Development (VB6 - Delphi - Clipper), Computer Graphics (PS - FW - CD - AutoCad), Marketing Strategy, Network, and more.",
+    },
   ],
   skills: {
-    proficient: ["JavaScript", "TypeScript", "React", "Node.js", "CSS/Sass", "PostgreSQL"],
-    familiar: ["Python", "Go", "Docker", "Kubernetes", "AWS", "GraphQL"]
+    proficient: [
+      "Javascript/Typescript",
+      "React",
+      "React-Native/Expo",
+      "Next.js",
+      "Webpack",
+      "Jest",
+      "Redux/Redux-Saga",
+      "React-Router",
+      "MUI",
+      "Node.js/Express.js",
+      "Docker",
+      "Git",
+      "REST APIs",
+      "Cypress",
+      "Playwright",
+      "Nx.dev",
+      "GCP",
+    ],
+    familiar: [
+      "GraphQL",
+      "Python/Flask",
+      "Jenkins",
+      "Github Actions",
+      "Postgres",
+      "AWS",
+      "Digital Ocean",
+      "Data Structures & Algorithms",
+    ],
   },
-  oss: [
-    "resume-builder — open source Astro resume editor",
-    "react-hooks-lib — collection of reusable React hooks",
-    "css-grid-layout — CSS grid utility library"
-  ],
+  oss: ["Soundnode App (creator)", "Rome tools", "NX.dev"],
   talks: [
-    "\"Modern CSS Techniques\" — JSConf 2023",
-    "\"Building Scalable APIs with Node.js\" — NodeSummit 2022",
-    "\"The Future of Web Components\" — WebDevConf 2021"
+    "Intro to Docker at FrontInBH, Brazil 2017",
+    "Soundnode App at Hamburg, Germany JS meetup 2017",
+    "NW.js (former node-webkit) at ChicagoWebConf 2015",
+    "Intro to React at Chicago HTML5 meetup (2015)",
   ],
-  hobbies: ["Photography", "Rock climbing", "Open source contributing", "Coffee brewing"]
+  hobbies: ["Brazilian Jiu-Jitsu (Black-Belt)"],
 };
