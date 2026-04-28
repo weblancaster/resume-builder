@@ -8,6 +8,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "5.15.8"
+    "astro": "5.15.8",
+    "html2pdf.js": "0.14.0"
   }
 }
